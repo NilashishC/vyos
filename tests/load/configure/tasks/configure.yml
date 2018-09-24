@@ -1,0 +1,39 @@
+- name: Fetch existing host-name from the device
+  cli: 
+    command: show host name
+  register: hostname
+
+- name: enter configuration mode
+  cli:
+    command: configure
+  register: result
+
+- assert:
+    that:
+      - "result.failed == false"
+
+- name: load configuration
+  cli:
+    command: set system host-name test-vyos
+  register: result
+
+- assert:
+    that:
+      - "result.failed == false"
+ 
+- name: Revert back the original host name
+  cli:
+    command: "set system host-name {{ hostname.stdout }}"
+
+- name: commit configuration
+  cli:
+    command: commit
+  register: result
+
+- assert:
+    that:
+      - "result.failed == false"
+
+- name: exit configuration mode
+  cli:
+    command: exit

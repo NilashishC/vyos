@@ -1,0 +1,6 @@
+- hosts: appliance
+  connection: network_cli
+  gather_facts: no
+
+  roles:
+    - configure
